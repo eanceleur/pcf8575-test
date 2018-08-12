@@ -8,6 +8,9 @@ Small tests with Rpi like hardware, i2c bus, pcf 8575 and leds...
 * resistors : 1k, 100k
 * leds
 
+pictures :
+https://www.instagram.com/p/BmX561CHHG3/?utm_source=ig_web_copy_link
+
 # find pcf 8575 address
 ```
 root@OrangePiH6:~# i2cdetect -y 0
