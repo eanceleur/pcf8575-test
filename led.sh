@@ -1,20 +1,30 @@
 #!/bin/bash
 
-# hardware : leds on p1 and p10
+# hardware : leds on p2, p5 and p10
 
 while [ true ]
 do
-# first led is p10 
-i2cset -y 1 0x20 0x02 0x00
+
+VALUE="0xFD 0xFF"
+echo "red ($VALUE)"
+i2cset -y 1 0x20  $VALUE
 
 # get status asking a word value
 i2cget -y 1 0x20 0 w
 sleep 1
 
-# switch off first led switch one second
-i2cset -y 1 0x20 0x00 0x01 
+VALUE="0xDF 0xFF"
+echo "green ($VALUE)"
+i2cset -y 1 0x20 $VALUE
+i2cget -y 1 0x20 0 w
+sleep 1
+
+VALUE="0xFF 0xFE"
+echo "blue ($VALUE)"
+i2cset -y 1 0x20 $VALUE
 i2cget -y 1 0x20 0 w
 sleep 1
 
 done
+
 
