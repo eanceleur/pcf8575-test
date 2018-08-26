@@ -6,6 +6,7 @@ import leds2pcf
 
 # create object with i2cbus number and pcf adress
 leds = leds2pcf.Leds( 1, 0x20 )
+leds.set_debug(True)
 
 def the_loop():
   while True:
@@ -20,6 +21,7 @@ def matrix():
     [ 'R', 'B' ],
     [ 'B', 'G' ],
   ]
+  leds.set_debug(False)
   while True:
     for row in range(len(matrix)):
       for col in range(len(matrix[row])):

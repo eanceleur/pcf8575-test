@@ -15,8 +15,15 @@ class Leds :
   def __init__(self, i2cbus, pcf_address ):
     self.i2cbus = i2cbus
     self.pcf_address = pcf_address
+    self.debug = False
     self.bus = smbus.SMBus( self.i2cbus )
 
+  def set_debug( self, debug ):
+    if debug == True:
+	  self.debug = True
+    else:
+	  self.debug = False
+	  
   # write data to pcf
   def write2pcf( self, ports ):
     p0p7 = ports & 0x00ff
@@ -25,7 +32,8 @@ class Leds :
     p0p7 = ~ p0p7
     p10p17 = p10p17 ^ 0xF0    # colors are not inversed
     self.bus.write_byte_data(self.pcf_address, p0p7 , p10p17 )
-    print( "  i2c write data : 0x{0:X} 0x{1:X} 0x{2:X}".format( self.pcf_address, p0p7 & 0xFF, p10p17 & 0xFF ))
+    if self.debug:
+      print( "  i2c write data : 0x{0:X} 0x{1:X} 0x{2:X}".format( self.pcf_address, p0p7 & 0xFF, p10p17 & 0xFF ))
 
   def turn_on( self, row, col, color ):
     
@@ -42,10 +50,12 @@ class Leds :
 
     ports |= self.mapping_cols[col]
 	
-    print( "ports = {0}".format( hex(ports)))
+    if self.debug:
+      print( "ports = {0}".format( hex(ports)))
     
     self.write2pcf( ports )
 
   def turn_off(self):
-    print( "turn off" )
+    if self.debug:
+      print( "turn off" )
     self.write2pcf( 0 )
