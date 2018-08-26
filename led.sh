@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# hardware : leds on p2, p5 and p10
+# TODO : script to update for release > v2.0
 
 while [ true ]
 do
