@@ -16,17 +16,22 @@ def the_loop():
           leds.turn_on( row, col, color )
           time.sleep(2)
 
-def matrix():
-  matrix = [
-    [ 'R', 'B' ],
-    [ 'B', 'G' ],
-  ]
+def matrix_one( matrix ):
   leds.set_debug(False)
   while True:
     for row in range(len(matrix)):
       for col in range(len(matrix[row])):
         leds.turn_on( row, col, matrix[row][col] )
 
+def matrix_several():
+  m = [
+    [
+      ['R', 'B'],
+      ['G', 'R']
+    ],
+  ]
+  for i in range(len(m)):
+    matrix_one( m[i] )
 
 print('Choose : \n')
 print(' 1 - loop rows, columns, colors\n')
@@ -37,7 +42,11 @@ f = int(f)
 if f == 1:
   the_loop()
 elif f == 2:
-  matrix()
+  m = [
+    [ 'R', 'B' ],
+    [ 'B', 'G' ],
+  ]
+  matrix_one( m )
 
 leds.turn_off()
 
