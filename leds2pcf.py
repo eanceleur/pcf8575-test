@@ -9,7 +9,7 @@ class Leds :
   # R G B
   mapping_colors = ( 0x0100, 0x0200, 0x0400 )
   # column
-  mapping_cols = ( 0x0001, 0x0002 )
+  mapping_cols = ( 0x0001, 0x0002, 0x0004, 0x0008 )
   
   # init smbus
   def __init__(self, i2cbus, pcf_address ):
