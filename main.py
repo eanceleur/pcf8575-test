@@ -15,6 +15,15 @@ def the_loop():
       for col in range(4):
         for color in ['R','G','B']:
           leds.turn_on( row, col, color )
+          time.sleep(0.5)
+
+# show each color on all leds
+def the_loop_RGB():
+  while True:
+    for color in ['R','G','B']:
+      for row in range(2):
+        for col in range(4):
+          leds.turn_on( row, col, color )
           time.sleep(1)
 
 # show one matrix pattern during 'duration' parameter
@@ -74,13 +83,16 @@ def matrix_several():
 # main menu
 print('Choose : \n')
 print(' 1 - loop rows, columns, colors\n')
-print(' 2 - matrix\n')
+print(' 2 - loop colors, rows, columns\n')
+print(' 3 - matrix samples\n')
 
 f = input()
 f = int(f)
 if f == 1:
   the_loop()
 elif f == 2:
+  the_loop_RGB()
+elif f == 3:
   leds.set_debug(False)
   while True:
     matrix_several( )
