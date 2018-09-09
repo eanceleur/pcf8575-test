@@ -1,5 +1,6 @@
 
 import smbus
+from multiprocessing import Process, Queue
 
 
 class Leds :
@@ -46,7 +47,7 @@ class Leds :
     elif color == 'B':
       ports |= self.mapping_colors[2]
     else:
-      None
+      pass
 
     ports |= self.mapping_cols[col]
 	
@@ -59,3 +60,38 @@ class Leds :
     if self.debug:
       print( "turn off" )
     self.write2pcf( 0 )
+
+
+class LedsMatrix( Leds ):
+
+  def __init__(self, i2cbus, pcf_address ):
+    Leds.__init__( self, i2cbus, pcf_address )
+
+    # init matrix
+    self.leds_matrix = []
+    for i in range(2):
+      self.leds_matrix.append([])
+      for j in range(4):
+        self.leds_matrix[i].append('O') 
+
+    self.queue = Queue()
+    self.io_thread = Process(target=self.internal_loop, args=(self.queue,self.leds_matrix))
+    self.io_thread.start()
+
+  def internal_loop(self, queue, matrix ):
+    print("internal loop started")
+    while True:
+      try:
+        (row,col,color) = queue.get_nowait()
+        matrix[row][col] = color
+      except:
+        pass
+      for row in range(len(matrix)):
+        for col in range(len(matrix[row])):
+          self.turn_on( row, col, matrix[row][col] )
+
+  def print_matrix(self):
+    print( self.leds_matrix[:] )
+
+  def update(self, row, col, color):
+    self.queue.put( (row,col,color) )
