@@ -4,18 +4,18 @@ import time
 
 import leds2pcf
 
-# create object with i2cbus number and pcf address
-leds = leds2pcf.Leds( 1, 0x20 )
+# create object with i2cbus number
+leds = leds2pcf.Leds( 1 )
 leds.set_debug(True)
 
 # show each color on each leds
 def the_loop():
   while True:
-    for row in range(2):
-      for col in range(4):
+    for row in range(8):
+      for col in range(8):
         for color in ['R','G','B']:
           leds.turn_on( row, col, color )
-          time.sleep(0.5)
+          time.sleep(0.1)
 
 # show each color on all leds
 def the_loop_RGB():
@@ -39,42 +39,38 @@ def matrix_one( matrix, duration=float("inf") ):
 # define different patterns
 def matrix_several():
   m = [
-# first combination
     { "duration": 5,
       "matrix": [
-        ['R', 'B', 'R', 'G' ],
-        ['G', 'R', 'B', 'R' ]
+        ['R', 'R', 'R', 'R', 'R', 'R', 'R', 'R' ],
+        ['G', 'G', 'G', 'G', 'G', 'G', 'G', 'G' ],
+        ['B', 'B', 'B', 'B', 'B', 'B', 'B', 'B' ],
+        ['R', 'R', 'R', 'R', 'R', 'R', 'R', 'R' ],
+        ['G', 'G', 'G', 'G', 'G', 'G', 'G', 'G' ],
+        ['B', 'B', 'B', 'B', 'B', 'B', 'B', 'B' ],
+        ['R', 'R', 'R', 'R', 'R', 'R', 'R', 'R' ],
+        ['G', 'G', 'G', 'G', 'G', 'G', 'G', 'G' ]
       ] },
     { "duration": 5,
       "matrix": [
-        ['G', 'R', 'B', 'R' ],
-        ['R', 'B', 'R', 'G' ],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' ],
+        ['O', 'O', 'B', 'O', 'O', 'B', 'O', 'O' ],
+        ['O', 'O', 'B', 'O', 'O', 'B', 'O', 'O' ],
+        ['O', 'O', 'B', 'O', 'O', 'B', 'O', 'O' ],
+        ['O', 'O', 'B', 'B', 'B', 'B', 'O', 'O' ],
+        ['O', 'O', 'B', 'O', 'O', 'B', 'O', 'O' ],
+        ['O', 'O', 'B', 'O', 'O', 'B', 'O', 'O' ],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' ],
       ] },
-# second display
-    { "duration": 2,
+    { "duration": 5,
       "matrix": [
-        ['G', 'G', 'G', 'G' ],
-        ['B', 'B', 'B', 'B' ],
-      ] },
-    { "duration": 2,
-      "matrix": [
-        ['B', 'G', 'G', 'G' ],
-        ['B', 'B', 'B', 'G' ],
-      ] },
-    { "duration": 2,
-      "matrix": [
-        ['B', 'B', 'G', 'G' ],
-        ['B', 'B', 'G', 'G' ],
-      ] },
-    { "duration": 2,
-      "matrix": [
-        ['B', 'B', 'B', 'G' ],
-        ['B', 'G', 'G', 'G' ],
-      ] },
-    { "duration": 2,
-      "matrix": [
-        ['B', 'B', 'B', 'B' ],
-        ['G', 'G', 'G', 'G' ],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' ],
+        ['O', 'O', 'O', 'G', 'G', 'O', 'O', 'O' ],
+        ['O', 'O', 'R', 'O', 'O', 'R', 'O', 'O' ],
+        ['O', 'G', 'O', 'O', 'O', 'O', 'G', 'O' ],
+        ['O', 'G', 'G', 'G', 'G', 'G', 'G', 'O' ],
+        ['O', 'G', 'O', 'O', 'O', 'O', 'G', 'O' ],
+        ['O', 'G', 'O', 'O', 'O', 'O', 'G', 'O' ],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' ],
       ] },
   ]
   for i in range(len(m)):
