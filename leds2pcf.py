@@ -8,7 +8,7 @@ class Leds :
   # a row = a led
   mapping_rows = ( 0x4000, 0x8000 )
   # R G B
-  mapping_colors = ( 0x0000, 0x0100, 0x0200 )
+  mapping_colors = ( 0x0000, 0x0001, 0x0002 )
   # column
   mapping_cols = ( 0x0001, 0x0002, 0x0004, 0x0008 )
   
@@ -19,6 +19,7 @@ class Leds :
     self.pcf_address1 = 0x21
     self.debug = False
     self.bus = smbus.SMBus( self.i2cbus )
+    self.color = 0xffff
 
   def set_debug( self, debug ):
     if debug == True:
@@ -27,21 +28,18 @@ class Leds :
 	  self.debug = False
 	  
   # write data to pcf
-  def write2pcf_row( self, ports ):
-    p0p7 = ports & 0x00ff
-    p10p17 = ports >> 8
+  def write2pcf_rowcol( self, ports ):
+    p0p7 = ~ (ports & 0x00ff)
+    p10p17 = ~ (ports >> 8)
 	# depending on hardware, we need to inverse data as leds swith on on zero level
-    p0p7 = ~ p0p7
-    p10p17 = p10p17 ^ 0xF0    # colors are not inversed
+
     self.bus.write_byte_data(self.pcf_address0, p0p7 , p10p17 )
     if self.debug:
       print( "  i2c write data : 0x{0:X} 0x{1:X} 0x{2:X}".format( self.pcf_address0, p0p7 & 0xFF, p10p17 & 0xFF ))
 
-  def write2pcf_col( self, ports ):
+  def write2pcf_color( self, ports ):
     p0p7 = ports & 0x00ff
     p10p17 = ports >> 8
-    p0p7 = ~ p0p7
-    p10p17 = ~ p10p17
     self.bus.write_byte_data(self.pcf_address1, p0p7 , p10p17 )
     if self.debug:
       print( "  i2c write data : 0x{0:X} 0x{1:X} 0x{2:X}".format( self.pcf_address1, p0p7 & 0xFF, p10p17 & 0xFF ))
@@ -49,24 +47,26 @@ class Leds :
   def turn_on( self, row, col, color ):
     
     ports0 = pow(2, row )
+    ports0 |= pow(2,col) << 8
 
     if color == 'R':
-      ports0 |= self.mapping_colors[0]
+      ports1 = self.mapping_colors[0]
     elif color == 'G':
-      ports0 |= self.mapping_colors[1]
+      ports1 = self.mapping_colors[1]
     elif color == 'B':
-      ports0 |= self.mapping_colors[2]
+      ports1 = self.mapping_colors[2]
     else:
       return
-      ports0 |= 0x0300
-
-    ports1 = pow(2,col)
 
     if self.debug:
       print( "ports = {0} {1}".format( hex(ports0), hex(ports1) ) )
     
-    self.write2pcf_row( ports0 )
-    self.write2pcf_col( ports1 )
+    if ports1 != self.color :
+      self.write2pcf_color( 0xffff )
+
+    self.write2pcf_rowcol( ports0 )
+    self.write2pcf_color( ports1 )
+    self.color = ports1
 
   def turn_off(self):
     if self.debug:
