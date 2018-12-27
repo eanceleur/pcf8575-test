@@ -82,9 +82,9 @@ class LedsMatrix( Leds ):
 
     # init matrix
     self.leds_matrix = []
-    for i in range(2):
+    for i in range(8):
       self.leds_matrix.append([])
-      for j in range(4):
+      for j in range(8):
         self.leds_matrix[i].append('O') 
 
     self.queue = Queue()
