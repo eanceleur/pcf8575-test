@@ -64,8 +64,8 @@ class Leds :
   def turn_off(self):
     if self.debug:
       print( "turn off" )
-    self.write2pcf_row( 0 )
-    self.write2pcf_col( 0 )
+    self.write2pcf_rowcol( 0 )
+    self.write2pcf_color( 0 )
 
 
 class LedsMatrix( Leds ):
