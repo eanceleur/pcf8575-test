@@ -151,20 +151,57 @@ class Text2Leds( Leds ):
       for row in range(8):
         r = m[ row ]
         for col in range(8):
-          if r & pow(2,col) :
+          if r & (1 << col) :
             self.turn_on( row, col, color )
-      stop = ( time.time() - t_begin ) >= 2
+      stop = ( time.time() - t_begin ) >= 1
 
   def text2leds( self, s, color ):
 	for i in range(len(s)) :
 		self.char2leds( s[ i ], color )
+
+  def streamtext2leds( self, s, color ):
+	self.write2pcf_color( self.map_color(color) )
+	m = [
+	  [ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+	  [ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+	]
+
+	for i in range(len(s)) :
+
+	  m[1] = self.font8x8_basic[ ord(s[i]) ][:]
+	  print(s[i])
+	  for k in range(8):
+	    stop = False
+	    t_begin = time.time()
+	    while not stop:
+	      for row in range(8):
+	        r = m[0][ row ]
+	        for col in range(8):
+	          if r & (1 << col) :
+	            self.write2pcf_rowcol( ((1 << col) << 8) | (1 << row) )
+	   
+	      stop = ( time.time() - t_begin ) >= 0.1
+
+	    for row in range(8):
+		  print(" {0:08b} {1:08b} {1:X}".format( m[0][row], m[1][row] ) )
+		  m[0][row] = m[0][row] >> 1
+		  m[0][row] |= (m[1][row] & 0x01) << 7
+		  m[1][row] = m[1][row] >> 1
+
 		
 
 if __name__ == '__main__':
+  
   leds = Text2Leds( 1 )
-  while True :
+     
+  while True :  
+    leds.streamtext2leds( 'Happy ', 'R' )
+    leds.streamtext2leds( 'New ', 'G' )
+    leds.streamtext2leds( 'Year!', 'B' )
+
     leds.text2leds( 'Happy', 'R' )
     leds.text2leds( 'New', 'G' )
     leds.text2leds( 'Year', 'B' )
-    leds.text2leds( '!', 'R' )
+    leds.text2leds( '!', 'G' )
+ 
 

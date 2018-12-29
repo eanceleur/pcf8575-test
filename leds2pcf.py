@@ -38,15 +38,20 @@ class Leds :
     if self.debug:
       print( "  i2c write data : 0x{0:X} 0x{1:X} 0x{2:X}".format( self.pcf_address1, p0p7 & 0xFF, p10p17 & 0xFF ))
 
+  def map_color( self, color ):
+    if color == 'R':
+      return self.mapping_colors[0]
+    elif color == 'G':
+      return self.mapping_colors[1]
+    elif color == 'B':
+      return self.mapping_colors[2]
+    else:
+      return -1
+	  
   def turn_on( self, row, col, color ):
     
-    if color == 'R':
-      ports1 = self.mapping_colors[0]
-    elif color == 'G':
-      ports1 = self.mapping_colors[1]
-    elif color == 'B':
-      ports1 = self.mapping_colors[2]
-    else:
+    ports1 = self.map_color( color )
+    if ports1 == -1 :
       return
 
     ports0 = ((1 << col) << 8) | (1 << row)
