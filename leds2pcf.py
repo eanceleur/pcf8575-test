@@ -5,12 +5,8 @@ from multiprocessing import Process, Queue
 
 class Leds :
 
-  # a row = a led
-  mapping_rows = ( 0x4000, 0x8000 )
   # R G B
   mapping_colors = ( 0x0000, 0x0001, 0x0002 )
-  # column
-  mapping_cols = ( 0x0001, 0x0002, 0x0004, 0x0008 )
   
   # init smbus
   def __init__(self, i2cbus ):
@@ -31,8 +27,6 @@ class Leds :
   def write2pcf_rowcol( self, ports ):
     p0p7 = ~ (ports & 0x00ff)
     p10p17 = ~ (ports >> 8)
-	# depending on hardware, we need to inverse data as leds swith on on zero level
-
     self.bus.write_byte_data(self.pcf_address0, p0p7 , p10p17 )
     if self.debug:
       print( "  i2c write data : 0x{0:X} 0x{1:X} 0x{2:X}".format( self.pcf_address0, p0p7 & 0xFF, p10p17 & 0xFF ))
@@ -46,9 +40,6 @@ class Leds :
 
   def turn_on( self, row, col, color ):
     
-    ports0 = pow(2, row )
-    ports0 |= pow(2,col) << 8
-
     if color == 'R':
       ports1 = self.mapping_colors[0]
     elif color == 'G':
@@ -57,6 +48,8 @@ class Leds :
       ports1 = self.mapping_colors[2]
     else:
       return
+
+    ports0 = ((1 << col) << 8) | (1 << row)
 
     if self.debug:
       print( "ports = {0} {1}".format( hex(ports0), hex(ports1) ) )
@@ -82,9 +75,10 @@ class LedsMatrix( Leds ):
 
     # init matrix
     self.leds_matrix = []
-    for i in range(8):
+    self.leds_matrix_size = 8
+    for i in range(self.leds_matrix_size):
       self.leds_matrix.append([])
-      for j in range(8):
+      for j in range(self.leds_matrix_size):
         self.leds_matrix[i].append('O') 
 
     self.queue = Queue()
@@ -99,8 +93,8 @@ class LedsMatrix( Leds ):
         matrix[row][col] = color
       except:
         pass
-      for row in range(len(matrix)):
-        for col in range(len(matrix[row])):
+      for row in range(self.leds_matrix_size):
+        for col in range(self.leds_matrix_size):
           self.turn_on( row, col, matrix[row][col] )
 
   def print_matrix(self):
