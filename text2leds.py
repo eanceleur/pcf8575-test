@@ -198,13 +198,21 @@ if __name__ == '__main__':
   leds = Text2Leds( 1 )
      
   while True :  
+    leds.text2leds( '5', 'R' )
+    leds.text2leds( '4', 'G' )
+    leds.text2leds( '3', 'B' )
+    leds.text2leds( '2', 'R' )
+    leds.text2leds( '1', 'G' )
+    
+    leds.streamtext2leds( '...', 'B' )
     leds.streamtext2leds( 'Happy ', 'R' )
     leds.streamtext2leds( 'New ', 'G' )
-    leds.streamtext2leds( 'Year!', 'B' )
-
-    leds.text2leds( 'Happy', 'R' )
-    leds.text2leds( 'New', 'G' )
-    leds.text2leds( 'Year', 'B' )
-    leds.text2leds( '!', 'G' )
+    leds.streamtext2leds( 'Year ', 'B' )
+    
+    leds.streamtext2leds( '2', 'R' )
+    leds.streamtext2leds( '0', 'G' )
+    leds.streamtext2leds( '1', 'B' )
+    leds.streamtext2leds( '9', 'R' )
+    leds.streamtext2leds( '! ', 'G' )
  
 
