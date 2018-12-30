@@ -176,14 +176,17 @@ class Text2Leds( Leds ):
 	    while not stop:
 	      for row in range(8):
 	        r = m[0][ row ]
-	        for col in range(8):
-	          if r & (1 << col) :
-	            self.write2pcf_rowcol( ((1 << col) << 8) | (1 << row) )
+	        if r == 0 :
+			  self.write2pcf_rowcol( (1 << row) )
+	        else:
+	          for col in range(8):
+	            if r & (1 << col) :
+	              self.write2pcf_rowcol( ((1 << col) << 8) | (1 << row) )
 	   
 	      stop = ( time.time() - t_begin ) >= 0.1
 
 	    for row in range(8):
-		  print(" {0:08b} {1:08b} {1:X}".format( m[0][row], m[1][row] ) )
+		  #print(" {0:08b} {1:08b} {1:X}".format( m[0][row], m[1][row] ) )
 		  m[0][row] = m[0][row] >> 1
 		  m[0][row] |= (m[1][row] & 0x01) << 7
 		  m[1][row] = m[1][row] >> 1
