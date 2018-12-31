@@ -209,10 +209,7 @@ if __name__ == '__main__':
     leds.streamtext2leds( 'New ', 'G' )
     leds.streamtext2leds( 'Year ', 'B' )
     
-    leds.streamtext2leds( '2', 'R' )
-    leds.streamtext2leds( '0', 'G' )
-    leds.streamtext2leds( '1', 'B' )
-    leds.streamtext2leds( '9', 'R' )
-    leds.streamtext2leds( '! ', 'G' )
+    leds.streamtext2leds( '2019 ', 'R' )
+    leds.streamtext2leds( '!!! ', 'G' )
  
 
