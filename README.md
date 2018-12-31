@@ -17,6 +17,8 @@ Just to make leds blinking for hardware and sofware tryouts....
 
 * v2.0 : https://github.com/eanceleur/pcf8575-test/wiki/Release-v2.0
 
+* v3.0 : https://github.com/eanceleur/pcf8575-test/wiki/Release-v3.0
+
 
 # useful links
 * http://www.orangepi.org/OrangePiOneplus/
