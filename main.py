@@ -21,10 +21,10 @@ def the_loop():
 def the_loop_RGB():
   while True:
     for color in ['R','G','B']:
-      for row in range(2):
-        for col in range(4):
+      for row in range(8):
+        for col in range(8):
           leds.turn_on( row, col, color )
-          time.sleep(1)
+          time.sleep(0.2)
 
 # show one matrix pattern during 'duration' parameter
 def matrix_one( matrix, duration=float("inf") ):
@@ -34,6 +34,17 @@ def matrix_one( matrix, duration=float("inf") ):
     for row in range(len(matrix)):
       for col in range(len(matrix[row])):
         leds.turn_on( row, col, matrix[row][col] )
+    stop = ( time.time() - t_begin ) >= duration
+
+def matrix_onev2( matrix, duration=float("inf") ):
+  stop = False
+  t_begin = time.time()
+  while not stop:
+    for row in range(len(matrix)):
+      col = 0
+      for color in str(matrix[row]):
+        leds.turn_on( row, col, color )
+        col += 1
     stop = ( time.time() - t_begin ) >= duration
 
 # define different patterns
@@ -76,11 +87,138 @@ def matrix_several():
   for i in range(len(m)):
     matrix_one( m[i]["matrix"], m[i]["duration"] )
 
+def heart():
+  m = [ 
+    [
+        '........' ,
+        '........' ,
+        '........' ,
+        '........' ,
+        '...R....' ,
+        '........' ,
+        '........' ,
+        '........' ,
+    ],
+    [
+        '........' ,
+        '........' ,
+        '........' ,
+        '........' ,
+        '..R.R...' ,
+        '...R....' ,
+        '........' ,
+        '........' ,
+    ],
+    [
+        '........' ,
+        '........' ,
+        '..R.R...' ,
+        '.R.R.R..' ,
+        '.R...R..' ,
+        '..R.R...' ,
+        '...R....' ,
+        '........' ,
+    ],    
+    [
+        '........' ,
+        '........' ,
+        '.RR.RR..' ,
+        'R..R..R.' ,
+        '.R...R..' ,
+        '..R.R...' ,
+        '...R....' ,
+        '........' ,
+    ],    
+    [
+        '........' ,
+        '.RR.RR..' ,
+        'R..R..R.' ,
+        'R.....R.' ,
+        '.R...R..' ,
+        '..R.R...' ,
+        '...R....' ,
+        '........' ,
+    ],
+  ]
+  for i in range(len(m)):
+    matrix_onev2( m[i], 1 )
+  for j in range(5):
+    for i in range(4,2, -1):
+      matrix_onev2( m[i], 0.5 )
+    #matrix_onev2( m[3], 0.5 )
+  
+def heart_arrow(): 
+  arrow = [
+    ['........',
+     '.RR.RR..',
+     'R..R..R.',
+     'R.....R.',
+     '.R...R..',
+     '..R.R...',
+     '...R....',
+     'B.......'],
+    ['........',
+     '.RR.RR..',
+     'R..R..R.',
+     'R.....R.',
+     '.R...R..',
+     '..R.R...',
+     'BB.R....',
+     'BB......'],
+    ['........',
+     '.RR.RR..',
+     'R..R..R.',
+     'R.....R.',
+     '.R...R..',
+     '.BB.R...',
+     '.BBR....',
+     'B.......'],
+    ['........',
+     '.RR.RR..',
+     'R..R..R.',
+     'R.....R.',
+     '.RBB.R..',
+     '..BBR...',
+     '.B.R....',
+     'B.......'],
+    ['........',
+     '.RR.RR..',
+     'R..R..R.',
+     'R.....R.',
+     '.R.B.R..',
+     '..B.R...',
+     '.B.R....',
+     'B.......'],
+    ['........',
+     '.RR.RBB.',
+     'R..R..B.',
+     'R.....R.',
+     '.R.B.R..',
+     '..B.R...',
+     '.B.R....',
+     'B.......'],
+    ['......BB',
+     '.RR.RRBB',
+     'R..R..R.',
+     'R.....R.',
+     '.R.B.R..',
+     '..B.R...',
+     '.B.R....',
+     '........'],
+  ]
+  for i in range(len(arrow)):
+    matrix_onev2( arrow[i], 0.5 )
+  matrix_onev2( arrow[6], 2 )
+  
+	
+
 # main menu
 print('Choose : \n')
 print(' 1 - loop rows, columns, colors\n')
 print(' 2 - loop colors, rows, columns\n')
 print(' 3 - matrix samples\n')
+print(' 4 - heart\n')
+print(' 5 - heart + arrow\n')
 
 f = input()
 f = int(f)
@@ -92,6 +230,14 @@ elif f == 3:
   leds.set_debug(False)
   while True:
     matrix_several( )
+elif f == 4:
+  leds.set_debug(False)
+  while True:
+    heart()
+elif f == 5:
+  leds.set_debug(False)
+  while True:
+    heart_arrow()
 
 leds.turn_off()
 
